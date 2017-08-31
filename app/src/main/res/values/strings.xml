@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">HDL</string>
+    <string name="action_settings">Settings</string>
+    <string name="Set">设置</string>
+    <string name="Information">公司</string>
+    <string name="Server">服务器</string>
+    <string name="Version">版本</string>
+    <string name="EnterWH">节点</string>
+    <string name="OutWH">出库</string>
+    <string name="Query">查询</string>
+    <string name="Back">返回</string>
+    <string name="CheckResult">验</string>
+    <string name="title_activity_main_set">MainSetActivity</string>
+    <string name="title_activity_main_enter_wh">MainEnterWHActivity</string>
+    <string name="title_activity_main_out_wh">MainOutWHActivity</string>
+    <string name="title_activity_main_query">MainQueryActivity</string>
+    <string name="title_name">GOSS TRACK</string>
+    <string name="ip_default_address_info">http://180.167.66.99</string>
+    <string name="ip_default_address">IP</string>
+    <string name="port_default_address_info">36751</string>
+    <string name="port_default_address">Port</string>
+    <string name="power_default_info">30</string>
+    <string name="power_default">功率</string>
+    <string name="ExternalCode_default_info">86.1020.301</string>
+    <string name="ExternalCode_DataCode_info">ZJfd-12345</string>
+    <string name="ExternalCode_default">企业公码</string>
+    <string name="product_default_info">滚轴</string>
+    <string name="product_default">产品名称</string>
+    <string name="lon_default_info">132.34</string>
+    <string name="lon_default">经度</string>
+    <string name="lat_default_info">32.14</string>
+    <string name="lat_default">纬度</string>
+    <string name="WorkName_default_info">E2043</string>
+    <string name="WorkName_default">人员</string>
+    <string name="NewData_default_info"></string>
+    <string name="NewData_default">备注</string>
+    <string name="Node_default_info">入库|出库|销售|售后</string>
+    <string name="Node_default">节点</string>
+
+    <string-array name="spingarr">
+        <item>入库</item>
+        <item>出库</item>
+        <item>销售</item>
+        <item>售后</item>
+    </string-array>
+
+    <string name="Company_info">高斯中国</string>
+    <string name="Company_default">名称</string>
+    <string name="ProductNameUrl_info">http://180.167.66.99:3060/outerPort/getProductNameList</string>
+    <string name="ProductNameUrl_default">Product</string>
+    <string name="FieldNameUrl_info">http://180.167.66.99:3060/outerPort/getFields</string>
+    <string name="FieldNameUrl_default">Field</string>
+    <string name="SaveUrl_info">http://180.167.66.99:3060/outerPort/saveTracking</string>
+    <string name="SaveUrl_default">Save</string>
+    <string name="ProxyServer_info">http://180.167.66.99:3060</string>
+    <string name="ProxyServer_default">代理</string>
+    <string name="VersionNo_info">过程终端V.1708cx</string>
+    <string name="VersionNo_default">软件版本</string>
+    <string name="SetItemBack">></string>
+    <string name="ReadCount">读取数量</string>
+    <string name="UploadCount">上传数量</string>
+    <string name="ZERO">0</string>
+    <string name="SCAN">开始扫描</string>
+    <string name="UPLOAD">提交</string>
+    <string name="disconnect_success">断开成功</string>
+    <string name="disconnect_fail">断开失败</string>
+    <string name="start_inventory_success">启动盘点成功</string>
+    <string name="start_inventory_fail">启动盘点失败</string>
+    <string name="stop_inventory_success">停止盘点成功</string>
+    <string name="stop_inventory_fail">停止盘点失败</string>
+    <string name="back_error_info_forNotStopInv">没有结束盘点</string>
+    <string name="rfid_connect_success">RFID 连接成功</string>
+    <string name="rfid_connect_fail_forSetAntenna">RFID 连接失败：设置天线失败</string>
+    <string name="rfid_connect_fail_forBusy">RFID 连接失败：rfid正在运行中</string>
+    <string name="rfidd_connect_fail">RFID 连接失败</string>
+    <string name="rfid_disconnect_success">RFID 断开成功</string>
+    <string name="rfid_disconnect_fail_forBusy">RFID 断开失败：rfid正在运行中</string>
+    <string name="rfid_disconnect_fail">RFID 断开失败</string>
+    <string name="rfid">配置</string>
+    <string name="rfid_connect">RFID 已连接</string>
+    <string name="rfid_disconnect">RFID 未连接</string>
+    <string name="app_exit">请再一次点击返回退出程序</string>
+    <string name="app_exit_success">退出程序，拜拜！</string>
+    <string name="title_activity_result">ResultActivity</string>
+</resources>
