@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HDL</string>
+    <string name="app_name">SWMS</string>
     <string name="action_settings">Settings</string>
     <string name="Set">设置</string>
     <string name="Information">公司</string>
@@ -54,7 +54,7 @@
     <string name="SaveUrl_default">Save</string>
     <string name="ProxyServer_info">http://180.167.66.99:3060</string>
     <string name="ProxyServer_default">代理</string>
-    <string name="VersionNo_info">过程终端V.1708cx</string>
+    <string name="VersionNo_info">V.zjfd1709cx.1</string>
     <string name="VersionNo_default">软件版本</string>
     <string name="SetItemBack">></string>
     <string name="ReadCount">读取数量</string>

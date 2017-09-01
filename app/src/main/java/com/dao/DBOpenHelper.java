@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBOpenHelper extends SQLiteOpenHelper {
     private Context mContext;
 
-    public static final String SetSql = "create table Setting (id integer PRIMARY KEY autoincrement not null,Company varchar(50) not null,Node varchar(50) not null,WorkName varchar(50) not null," +
-            "Url varchar(500) not null,Telephone varchar(500) not null," +
-            "Lat_Lon varchar(255) not null,NewData varchar(50) not null,Power varchar(50) not null," +
-            "LogDeadline varchar(50) not null,CCTime varchar(500),ScanStrategy varchar(500),AgainDeadline varchar(500),Vesion varchar(500),ScanInterval varchar(500))";
+    public static final String SetSql = "create table Setting (id integer PRIMARY KEY autoincrement not null," +
+            "UserManage varchar(50) not null,Server varchar(500) not null,DataBase varchar(50) not null," +
+            "Power varchar(50) not null,CCTime varchar(50) not null," +
+            "AgainDeadline varchar(50) not null,ScanInterval varchar(50) not null)";
 
     public static final String delete_setsql = "drop table if exists Setting";
 

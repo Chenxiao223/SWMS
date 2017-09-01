@@ -7,26 +7,24 @@
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#FF7A3F">
+        android:layout_height="48dp"
+        android:background="#F6D403">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
             android:padding="12dp"
-            android:src="@drawable/a_back" />
+            android:src="@drawable/iv_back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="设置"
-            android:textColor="#ffffff"
-            android:textSize="23dp" />
+            android:text="配 置"
+            android:textSize="22dp" />
 
     </RelativeLayout>
 
@@ -40,24 +38,7 @@
             android:id="@+id/table_layout_set"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:showDividers="beginning"
-
-            >
-
-            <TableRow
-                android:id="@+id/tableRow23"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#DEDEDE"
-                    android:text="@string/Information"
-                    android:textSize="20sp" />
-
-            </TableRow>
+            android:showDividers="beginning">
 
             <TableRow
                 android:id="@+id/tableRow3"
@@ -106,35 +87,32 @@
                 android:layout_marginTop="10dp">
 
                 <TextView
-                    android:id="@+id/tv_Company"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="@string/Company_default"
+                    android:text="用户管理"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
 
-                <TextView
-                    android:id="@+id/tv_Company_info"
+                <Spinner
+                    android:id="@+id/spin_userManage"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:ellipsize="end"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text="@string/Company_info"
+                    android:text="默认用户/强制用户"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/tv_Company_click"
+                    android:id="@+id/tv_userManage_click"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
+                    android:gravity="right" />
 
             </TableRow>
 
@@ -150,24 +128,24 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="@string/Node_default"
+                    android:text="服务器"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
 
                 <TextView
-                    android:id="@+id/tv_Node_info"
+                    android:id="@+id/tv_server_info"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:ellipsize="end"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text="@string/Node_default_info"
+                    android:text="162.168.2.3:3040"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/tv_Node_click"
+                    android:id="@+id/tv_server_click"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
@@ -188,23 +166,23 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="@string/WorkName_default"
+                    android:text="数据库"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_WorkName_info"
+                    android:id="@+id/tv_dataBase_info"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:ellipsize="end"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text="@string/WorkName_default_info"
+                    android:text="DB"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/tv_WorkName_click"
+                    android:id="@+id/tv_dataBase_click"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
@@ -212,217 +190,6 @@
                     android:gravity="right"
                     android:text="@string/SetItemBack"
                     android:textSize="20sp" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="网址"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_Url_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:text="www.gaosi.com"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_Url_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="电话"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_Telephone_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:text="13819569845"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_Telephone_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-
-                <TextView
-                    android:id="@+id/tv_Lon"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="经纬度"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_Lat_Lon_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:text="132.34 | 21"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_Lat_Lon_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-
-            </TableRow>
-
-
-            <TableRow
-                android:id="@+id/tableRow7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_Lat"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="@string/lat_default"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_Lat_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:text="@string/lat_default_info"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_Lat_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:id="@+id/tv_NewData"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="@string/NewData_default"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_NewData_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_NewData_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-
-            </TableRow>
-
-
-            <TableRow
-                android:id="@+id/tableRow20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#DEDEDE"
-                    android:text="@string/rfid"
-                    android:textSize="20sp" />
-
 
             </TableRow>
 
@@ -467,43 +234,6 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="日志期限"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_LogDeadline_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:text="@string/power_default_info"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_LogDeadline_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-
-
-            </TableRow>
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -527,7 +257,7 @@
                     android:ellipsize="end"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text="不限制"
+                    android:text="1-5"
                     android:textSize="20sp" />
 
                 <TextView
@@ -543,43 +273,6 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="扫描策略"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tv_ScanStrategy_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:maxEms="10"
-                    android:singleLine="true"
-                    android:text="在线扫描"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_ScanStrategy_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
-
-
-            </TableRow>
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -590,7 +283,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="重复限制"
+                    android:text="重传间隔"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -1127,10 +820,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="@string/SetItemBack"
-                    android:textSize="20sp" />
+                    android:layout_weight="1" />
 
             </TableRow>
 
