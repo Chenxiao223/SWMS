@@ -1,27 +1,41 @@
 package com.zjfd.chenxiao.DHL.UI;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dao.DBOperation;
+import com.dao.Operation;
 import com.dao.Setting;
 import com.zjfd.chenxiao.DHL.Adapter.HomePageAdapter;
 import com.zjfd.chenxiao.DHL.R;
+import com.zjfd.chenxiao.DHL.rfid.RfidOperation;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 
 
 /**
  * Created by Administrator on 2017/8/9 0009.
  */
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+    protected static final int MSG_DISCONNECT = 3;
+    protected static final int MSG_CONNECT = 2;
+    protected static final int MSG_OPERATION_SUCCESS = 1;
+//    protected static final int MSG_DISCONNECT=4;
     private TextView tv_ruku, tv_shangjia, tv_yiwei, tv_chuku, tv_pandian;
     private HomePageAdapter homePageAdapter = null;
     public ViewPager pager = null;
@@ -34,7 +48,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         //
+        connectRadio();
         setting = getSettingData();
+        Oldsetting = setting;
         initView();
 
     }
@@ -57,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         iv_search.setOnClickListener(this);
 
         pager = (ViewPager) findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(4);//
+        pager.setOffscreenPageLimit(4);//碎片左右各四个保持当前状态
         homePageAdapter = new HomePageAdapter(getSupportFragmentManager());
         pager.setAdapter(homePageAdapter);
 
@@ -93,7 +109,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(intent, requestCode);
                 break;
             case R.id.iv_search:
-                startActivity(new Intent(this, SearchActivity.class));
+                startActivity(new Intent(this,SearchActivity.class));
                 break;
         }
     }
@@ -177,29 +193,170 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     public static Setting Oldsetting = new Setting();
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case 0:
-//                Serializable setdata = data.getSerializableExtra("Setting");
-//                setting = (Setting) setdata;
-//                if (Integer.valueOf(Oldsetting.getPower()) != Integer.valueOf(setting.getPower())) {
-////                    disconnect();
-//                    Toast.makeText(getApplicationContext(), "重新设置功率中。。。", Toast.LENGTH_SHORT).show();
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
-////                    connectRadio();
-//                    Oldsetting = setting;
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                Serializable setdata = data.getSerializableExtra("Setting");
+                setting = (Setting) setdata;
+                Log.i("info",setting.getPower());
+                if (Oldsetting.getPower().equals(setting.getPower())) {
+//                    disconnect();
+                    Toast.makeText(getApplicationContext(), "重新设置功率中。。。", Toast.LENGTH_SHORT).show();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+//                    connectRadio();
+                    Oldsetting = setting;
+                }
+                break;
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
+    //连接RFID模块，返回结果
+    public void connectRadio() {
+        new Thread() {
+            public void run() {
+                Message closemsg = new Message();
+                try {
+                    Operation.setAntennaPower(15);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                closemsg.obj = Operation.connectRadio();
+                closemsg.what = MSG_CONNECT;
+                hMsg2.sendMessage(closemsg);
+            }
+        }.start();
+    }
+
+    private Handler hMsg2 = new StartHander2(this);
+    private class StartHander2 extends Handler {
+        WeakReference<Activity> mActivityRef;
+
+        StartHander2(Activity activity) {
+            mActivityRef = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            Activity activity = mActivityRef.get();
+            if (activity == null) {
+                return;
+            }
+
+            switch (msg.what) {
+
+                case MSG_DISCONNECT:
+                    int returnValue = (Integer) msg.obj;
+                    switch (returnValue) {
+                        case 0:
+                            Toast.makeText(HomeActivity.this, "RFID断开失败", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case 1:
+                            Toast.makeText(HomeActivity.this, "RFID断开成功", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case -1:
+                            Toast.makeText(HomeActivity.this, "RFID断开失败：rfid正在运行", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+
+                    break;
+
+
+                case MSG_CONNECT:
+                    int returnValue1 = (Integer) msg.obj;
+                    switch (returnValue1) {
+                        case 0:
+                            Toast.makeText(HomeActivity.this, "RFID连接成功", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case -1:
+                            Toast.makeText(HomeActivity.this, "失败", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case -2:
+                            Toast.makeText(HomeActivity.this, "失败：忙中", Toast.LENGTH_SHORT).show();
+
+                            break;
+
+                        case 2:
+                            Toast.makeText(HomeActivity.this, "失败：设置天线", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    break;
+
+//                case MSG_DISCONNECT:
+//
+//                    int returnValue3 = (Integer) msg.obj;
+//
+//                    switch (returnValue3) {
+//                        case 0:
+//                            Toast.makeText(HomeActivity.this, "断开失败", Toast.LENGTH_SHORT).show();
+//                            break;
+//
+//                        case -1:
+//                            Toast.makeText(HomeActivity.this, "断开失败：RFID正在运行中", Toast.LENGTH_SHORT).show();
+//                            break;
+//
+//                        case 1:
+//                            Toast.makeText(HomeActivity.this, "断开成功", Toast.LENGTH_SHORT).show();
+//
+//                            break;
+//                    }
+//
+//                    break;
+
+                case MSG_OPERATION_SUCCESS:
+                    String returnValue2 = (String) msg.obj;
+                    break;
+
+                default:
+
+                    break;
+
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //点击弹出对话框
+        new AlertDialog.Builder(this).setTitle("温馨提示").setMessage("是否要退出仓库管理系统应用？")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //断开RFID模块
+                        disconnectRadio();
+                        finish();
+                    }
+                })
+                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+    }
+
+
+    //连接RFID模块，返回结果
+    public void disconnectRadio() {
+        new Thread() {
+            public void run() {
+                Message closemsg = new Message();
+                closemsg.obj = RfidOperation.DisconnectRadio();
+                closemsg.what = MSG_DISCONNECT;
+                hMsg2.sendMessage(closemsg);
+            }
+        }.start();
+    }
 }

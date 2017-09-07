@@ -1,5 +1,6 @@
 package com.zjfd.chenxiao.DHL.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,13 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dao.Setting;
+import com.dao.ShowInfo;
+import com.zjfd.chenxiao.DHL.Fragment.RukuFragment;
 import com.zjfd.chenxiao.DHL.R;
 
-//import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Timer;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;
+
+//import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 
 /**
  * Created by Administrator on 2017/4/19.
@@ -27,34 +35,31 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
     Button start_spot, open_flashlight, close_flashlight;
     private static final String TAG = "ScanActivity";
     Timer timer = new Timer();
-    public int recLen;
-    private boolean star_stop=true;
+    private boolean star_stop = true;
     private ImageView iv_back;
     Setting setting;
     public String epc;
+    private int flag;
+//    private static final int REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY = 666;
 
     private QRCodeView mQRCodeView;
-    private TextView tv_value, tv_jishi;
+    private TextView tv_value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_scan);
         setting = (Setting) this.getIntent().getSerializableExtra("Scan");
-
-        recLen=Integer.parseInt(setting.getScanInterval());
+        Intent intent = getIntent();
+        flag = intent.getIntExtra("search", 0);
         initView();
         mQRCodeView = (ZXingView) findViewById(R.id.zxingview);
         mQRCodeView.setDelegate(this);
         mQRCodeView.startSpot();
-
-//        HomeActivity.showInfoList.clear();//进来的时候清空主页数据
-
     }
 
     private void initView() {
-        iv_back= (ImageView) findViewById(R.id.iv_back);
-        tv_jishi = (TextView) findViewById(R.id.tv_jishi);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
         tv_value = (TextView) findViewById(R.id.tv_value);
         start_spot = (Button) findViewById(R.id.start_spot);
         open_flashlight = (Button) findViewById(R.id.open_flashlight);
@@ -69,6 +74,7 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
     protected void onStart() {
         super.onStart();
         mQRCodeView.startCamera();
+//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
         mQRCodeView.showScanRect();
     }
 
@@ -85,60 +91,48 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        epc=result;
-//        HomeActivity.addShowInfoToList(result);//往HomeActivity添加数据
-        recLen = Integer.parseInt(setting.getScanInterval());
-        tv_jishi.setVisibility(View.VISIBLE);
+        epc = result;
         tv_value.setVisibility(View.VISIBLE);
-        tv_value.setText(result);
         vibrate();
         mQRCodeView.stopSpot();//关闭扫描
-        Message message = handler.obtainMessage(1);     // Message
-        handler.sendMessageDelayed(message, 1000);
+        if (flag == 1) {
+            addSearch(epc);
+        } else {
+            addRuku(epc);
+        }
     }
 
-    final Handler handler = new Handler() {
+    public void addRuku(String epc) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        String time = df.format(new Date());
+        RukuFragment.rukuFragment.showinfo = new ShowInfo();
+        RukuFragment.rukuFragment.showinfo.setEpc(epc);
+        RukuFragment.rukuFragment.showinfo.setTime(time);
+        RukuFragment.rukuFragment.addShowInfoToList(RukuFragment.rukuFragment.getRfid());
+        finish();
+    }
 
-        public void handleMessage(Message msg) {         // handle message
-            switch (msg.what) {
-                case 1:
-                    recLen--;
-                    tv_jishi.setText("扫描倒计时：" + recLen);
-
-                    if (recLen > 0) {
-                        Message message = handler.obtainMessage(1);
-                        handler.sendMessageDelayed(message, 1000);      // send message
-                    } else {
-                        tv_jishi.setVisibility(View.GONE);
-                        tv_value.setVisibility(View.GONE);
-                        mQRCodeView.startCamera();
-                        mQRCodeView.startSpot();
-                    }
-            }
-
-            super.handleMessage(msg);
-        }
-    };
-
-    @Override
-    public void onScanQRCodeOpenCameraError() {
-        Log.e(TAG, "打开相机出错");
+    public void addSearch(String str) {
+        SearchActivity.searchActivity.hashMap = new HashMap<>();
+        SearchActivity.searchActivity.hashMap.put("content1", str);
+        SearchActivity.searchActivity.addShowInfoToList(SearchActivity.searchActivity.getRfid());
+        finish();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_spot:
-                if (star_stop){
+                if (star_stop) {
                     start_spot.setText("开始扫描");
                     mQRCodeView.changeToScanQRCodeStyle();
                     mQRCodeView.stopSpot();
-                    star_stop=false;
-                }else{
+                    star_stop = false;
+                } else {
                     start_spot.setText("停止扫描");
                     mQRCodeView.changeToScanQRCodeStyle();
                     mQRCodeView.startSpot();
-                    star_stop=true;
+                    star_stop = true;
                 }
 
                 break;
@@ -155,5 +149,10 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onScanQRCodeOpenCameraError() {
+        Log.e(TAG, "打开相机出错");
     }
 }

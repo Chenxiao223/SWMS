@@ -1,16 +1,34 @@
 package com.dao;
 
-public class ShowInfo {
+public class ShowInfo2 {
     String Epc;
     String time;
     String Epc2;
     String time2;
+    String sum;
+    String updatasum;
     String power;
     String rssi;
     boolean UploadFlag;
 
     public boolean getUploadFlag() {
         return UploadFlag;
+    }
+
+    public String getSum() {
+        return sum;
+    }
+
+    public void setSum(String sum) {
+        this.sum = sum;
+    }
+
+    public String getUpdatasum() {
+        return updatasum;
+    }
+
+    public void setUpdatasum(String updatasum) {
+        this.updatasum = updatasum;
     }
 
     public void setUploadFlag(boolean uploadFlag) {

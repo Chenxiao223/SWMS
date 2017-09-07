@@ -3,6 +3,8 @@
  */
 package com.hiklife.rfidapi;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -175,10 +177,41 @@ public class RadioCtrl implements Serializable {
                             int PktRssi = ByteUtil.getReverseBytesShort(packet, 13);
                             int epcLength = ByteUtil.getReverseBytesShort(packet, 15);
 
+//                            int len =epcLength / 4;
+//                            int bytelen = epcLength / 2;
+
                             InventoryTagInfo inventoryInfo = new InventoryTagInfo();
+
+//                            inventoryInfo.epc = new short[len];
+//                            for (int i = pktEpc_start, j = 0; i < (pktEpc_start + bytelen) && j < inventoryInfo.epc.length; i += 2, j++) {
+//                                inventoryInfo.epc[j] = ByteUtil.getShort(packet, i);
+//                            }
+
+//                            if((packet[7] & 0X02)== 0x02) {
+//
+//                            }
+//                                inventoryInfo.tid = new short[6];
+//                                for (int k = pktEpc_start+bytelen, l = 0; k < (pktEpc_start + bytelen +12) && l < 6; k+=2, l++) {
+//                                    inventoryInfo.tid[l] = ByteUtil.getShort(packet, k);
+//                                }
+
+
+
+
                             inventoryInfo.epc = new short[epcLength / 2];
                             for (int i = pktEpc_start, j = 0; i < (pktEpc_start + epcLength) && j < inventoryInfo.epc.length; i += 2, j++) {
                                 inventoryInfo.epc[j] = ByteUtil.getShort(packet, i);
+                            }
+                            try {
+                                inventoryInfo.tid = new short[6];
+                                if (epcLength==24){
+                                    for (int k = pktEpc_start+12, l = 0; k < (pktEpc_start + 24) && l < 6; k+=2, l++) {
+                                        inventoryInfo.tid[l] = ByteUtil.getShort(packet, k);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.i("eee",e.toString());
+                                e.printStackTrace();
                             }
 
                             inventoryInfo.rssi = (float) (PktRssi / 10.0);
@@ -777,7 +810,7 @@ public class RadioCtrl implements Serializable {
         try {
             if (mSerialPort != null) {
                 byte[] buffer = new byte[2];
-                buffer[0] = 0x00;
+                buffer[0] = 0x01;
                 buffer[1] = (byte) invMode;
                 buffer = commonFun.MakePacket(buffer, commonFun.HostPacketTypes.HOST_PACKET_TYPE_18K6C_INVENTORY_COMMAND);
 

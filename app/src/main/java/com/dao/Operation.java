@@ -1,5 +1,7 @@
 package com.dao;
 
+import android.util.Log;
+
 import com.hiklife.rfidapi.AntennaPortConfiguration;
 import com.hiklife.rfidapi.MemoryBank;
 import com.hiklife.rfidapi.RadioCtrl;
@@ -76,11 +78,10 @@ public class Operation {
 								&& myRadio.SetCurrentLinkProfile(1) == ctrlOperateResult.OK
 								&& myRadio.SetTagGroupSession(Session.S1) == ctrlOperateResult.OK
 								&& myRadio.SetCurrentSingulationAlgorithm(parm) == ctrlOperateResult.OK) {
-							
+
 							returnValue = 0;
-							
+
 						} else {
-							
 							returnValue = 2;
 						}
 						
@@ -1253,30 +1254,5 @@ public class Operation {
 				return 0;
 			}	 
 	 }
-		
-		
-		
-		
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

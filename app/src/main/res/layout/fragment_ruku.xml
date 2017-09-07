@@ -16,6 +16,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_uploadCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -28,6 +29,7 @@
                 android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/tv_readCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -35,6 +37,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/iv_scan"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
@@ -54,7 +57,7 @@
         android:src="@drawable/hengxian"/>
 
     <ListView
-        android:id="@+id/list_item"
+        android:id="@+id/lv_EnterWH"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

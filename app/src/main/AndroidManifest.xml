@@ -62,11 +62,11 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name="com.zjfd.chenxiao.DHL.UI.HomeActivity"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name="com.zjfd.chenxiao.DHL.UI.SettingActivity"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".UI.SearchActivity"

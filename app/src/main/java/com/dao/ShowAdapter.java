@@ -60,9 +60,9 @@ public class ShowAdapter extends BaseAdapter {
 			convertView = minflater.inflate(R.layout.show, null);
 			viewHold.tvfullcode =(TextView) convertView.findViewById(R.id.tv_showfullcode);//全码
 			viewHold.tvtime =(TextView) convertView.findViewById(R.id.tv_showscantime);//时间
-			viewHold.power =(TextView) convertView.findViewById(R.id.tv_power);//功率
-			viewHold.rssi =(TextView) convertView.findViewById(R.id.tv_rssi);//rssi值
-			
+			viewHold.tvfullcode2 =(TextView) convertView.findViewById(R.id.tv_showfullcode2);//全码
+			viewHold.tvtime2 =(TextView) convertView.findViewById(R.id.tv_showscantime2);//时间
+
 			convertView.setTag(viewHold);
 		}
 		else{
@@ -71,16 +71,16 @@ public class ShowAdapter extends BaseAdapter {
 		}
 		viewHold.tvfullcode.setText(mList.get(position).getEpc());
 		viewHold.tvtime.setText(mList.get(position).getTime());
-		viewHold.power.setText(mList.get(position).getPower());
-		viewHold.rssi.setText(mList.get(position).getRssi());
+		viewHold.tvfullcode2.setText(mList.get(position).getEpc2());
+		viewHold.tvtime2.setText(mList.get(position).getTime2());
 		return convertView;
 	}
 	
 	private final static class ViewHold{
 		TextView tvfullcode;
 		TextView tvtime;
-		TextView power;
-		TextView rssi;
+		TextView tvfullcode2;
+		TextView tvtime2;
 	}
 
 }

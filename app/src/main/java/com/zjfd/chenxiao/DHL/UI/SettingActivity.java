@@ -203,49 +203,30 @@ public class SettingActivity extends Activity {
             }
         });
 
-
-
-        //返回主页面
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setMenuToSetting();
-                insertDataBase();
-                resultCode = 9;
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("Setting", (Serializable) setting);
-                SettingActivity.this.setResult(resultCode, resultIntent);
-                SettingActivity.this.finish();
-            }
-
-
-        });
-
-
     }
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            setMenuToSetting();
-            insertDataBase();
-            resultCode = 9;
-
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("Setting", (Serializable) setting);
-            SettingActivity.this.setResult(resultCode, resultIntent);
-            SettingActivity.this.finish();
-
-            return super.onKeyDown(keyCode, event);
-
-        } else {
-
-            return false;
-        }
-
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        // TODO Auto-generated method stub
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            setMenuToSetting();
+//            insertDataBase();
+//            resultCode = 9;
+//
+//            Intent resultIntent = new Intent();
+//            resultIntent.putExtra("Setting", (Serializable) setting);
+//            SettingActivity.this.setResult(resultCode, resultIntent);
+//            SettingActivity.this.finish();
+//
+//            return super.onKeyDown(keyCode, event);
+//
+//        } else {
+//
+//            return false;
+//        }
+//
+//    }
 
 
     public void initView() {
@@ -268,6 +249,19 @@ public class SettingActivity extends Activity {
         arrayAdapter=new ArrayAdapter(this,R.layout.spinner_item,R.id.tv_item,list);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         spin_userManage.setAdapter(arrayAdapter);
+        //返回主页面
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                setMenuToSetting();
+                insertDataBase();
+                resultCode = 9;
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("Setting", (Serializable) setting);
+                SettingActivity.this.setResult(resultCode, resultIntent);
+                SettingActivity.this.finish();
+            }
+        });
     }
 
 
@@ -404,17 +398,5 @@ public class SettingActivity extends Activity {
 //        this.deleteDatabase("goss.db");
         dboperation.insertSet(setting);
     }
-
-    //点击回退按钮
-//    public void back(View view){
-//        setMenuToSetting();
-//        insertDataBase();
-//        resultCode= 9;
-//
-//        Intent resultIntent = new Intent();
-//        resultIntent.putExtra("Setting", (Serializable) setting);
-//        SettingActivity.this.setResult(resultCode, resultIntent);
-//        finish();
-//    }
 
 }
