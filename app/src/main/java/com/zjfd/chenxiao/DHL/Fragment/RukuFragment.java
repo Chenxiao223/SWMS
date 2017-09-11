@@ -22,14 +22,21 @@ import com.dao.Operation;
 import com.dao.Setting;
 import com.dao.ShowAdapter;
 import com.dao.ShowInfo;
+import com.google.gson.Gson;
 import com.hiklife.rfidapi.InventoryEvent;
 import com.hiklife.rfidapi.OnInventoryEventListener;
 import com.hiklife.rfidapi.radioBusyException;
+import com.loopj.android.http.RequestParams;
+import com.zjfd.chenxiao.DHL.Entity.UpDataState;
 import com.zjfd.chenxiao.DHL.R;
 import com.zjfd.chenxiao.DHL.UI.HomeActivity;
 import com.zjfd.chenxiao.DHL.UI.ScanActivity;
+import com.zjfd.chenxiao.DHL.http.BaseHttpResponseHandler;
+import com.zjfd.chenxiao.DHL.http.HttpNetworkRequest;
 import com.zjfd.chenxiao.DHL.rfid.Result;
 import com.zjfd.chenxiao.DHL.rfid.RfidOperation;
+
+import org.apache.http.Header;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -60,6 +67,7 @@ public class RukuFragment extends Fragment {
     public static ListView list_view;
     private ImageView iv_scan;
     public static ShowInfo showinfo;
+    private int num=1;//记录上传成功的次数
 
     @Nullable
     @Override
@@ -237,7 +245,7 @@ public class RukuFragment extends Fragment {
 
     }
 
-    public static void addShowInfoToList(String epc) {
+    public void addShowInfoToList(String epc) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         String time = df.format(new Date());
 
@@ -247,8 +255,10 @@ public class RukuFragment extends Fragment {
             showinfo.setEpc2(epc);
             showinfo.setTime2(time);
             showinfo.setUploadFlag(false);
+            upData(showinfo);
             showInfoList.add(showinfo);
             showadapter.notifyDataSetChanged();
+            tv_readCount.setText(""+showInfoList.size());
         }
     }
 
@@ -264,5 +274,42 @@ public class RukuFragment extends Fragment {
         return result.getReadInfo().toString();
     }
 
+    //数据上传成功
+    public void upData(final ShowInfo showinfo){
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+            String time = df.format(new Date());
+            RequestParams params=new RequestParams();
+            params.put("index","1");
+            params.put("tablename","warehouse");
+            params.put("parameter",showinfo.getEpc());//包裹条码
+            params.put("parameter1",time);//入库时间
+            params.put("parameter2",showinfo.getEpc2());//包裹rfid
+            params.put("parameter3", showinfo.getTime());//条码时间
+            HttpNetworkRequest.get("add", params, new BaseHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
+                    if (rawResponse.equals("ok")) {
+                        showadapter=new ShowAdapter(getActivity(), showInfoList);
+                        list_view.setAdapter(showadapter);
+                        showadapter.changeColor(showInfoList.size() - 1);//传1改变字体颜色
+                        showadapter.notifyDataSetChanged();
+                        tv_uploadCount.setText(""+num++);
+                        Toast.makeText(getActivity(), "数据上传成功", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "数据上传失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
+                    Toast.makeText(getActivity(), "数据上传失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "网络异常", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

@@ -9,10 +9,10 @@
         android:background="#F6D403">
 
         <ImageView
-            android:id="@+id/iv_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="12dp"
+            android:onClick="back"
             android:src="@drawable/iv_back" />
 
         <TextView
@@ -28,7 +28,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:src="@drawable/timg"
         android:scaleType="fitXY"/>
     <LinearLayout
@@ -55,7 +55,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/shape_text"
-                android:inputType="number"
                 android:gravity="center"
                 android:hint="账号"
                 android:singleLine="true"

@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.minihost.rfidapi.SerialPort;
 
@@ -116,11 +118,15 @@ public class RadioCtrl implements Serializable {
     private class InventoryThread extends Thread {
         @Override
         public void run() {
+
             boolean stopThread = false;
             int waitCount = 0;
+
             while (!stopThread) {
                 byte[] packet = recvBuffer.GetFullPackBuf();
+
                 if (packet != null) {
+
                     switch (ByteUtil.getReverseBytesShort(packet, 5)) {
                         case commonFun.RfidPacketTypes.RFID_PACKET_TYPE_COMMAND_BEGIN: {
                             break;
@@ -135,6 +141,7 @@ public class RadioCtrl implements Serializable {
                                     stopThread = true;
                                 } else {
                                     try {
+
                                         Thread.sleep(interval);
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -177,26 +184,7 @@ public class RadioCtrl implements Serializable {
                             int PktRssi = ByteUtil.getReverseBytesShort(packet, 13);
                             int epcLength = ByteUtil.getReverseBytesShort(packet, 15);
 
-//                            int len =epcLength / 4;
-//                            int bytelen = epcLength / 2;
-
                             InventoryTagInfo inventoryInfo = new InventoryTagInfo();
-
-//                            inventoryInfo.epc = new short[len];
-//                            for (int i = pktEpc_start, j = 0; i < (pktEpc_start + bytelen) && j < inventoryInfo.epc.length; i += 2, j++) {
-//                                inventoryInfo.epc[j] = ByteUtil.getShort(packet, i);
-//                            }
-
-//                            if((packet[7] & 0X02)== 0x02) {
-//
-//                            }
-//                                inventoryInfo.tid = new short[6];
-//                                for (int k = pktEpc_start+bytelen, l = 0; k < (pktEpc_start + bytelen +12) && l < 6; k+=2, l++) {
-//                                    inventoryInfo.tid[l] = ByteUtil.getShort(packet, k);
-//                                }
-
-
-
 
                             inventoryInfo.epc = new short[epcLength / 2];
                             for (int i = pktEpc_start, j = 0; i < (pktEpc_start + epcLength) && j < inventoryInfo.epc.length; i += 2, j++) {
@@ -210,7 +198,6 @@ public class RadioCtrl implements Serializable {
                                     }
                                 }
                             } catch (Exception e) {
-                                Log.i("eee",e.toString());
                                 e.printStackTrace();
                             }
 
@@ -808,14 +795,22 @@ public class RadioCtrl implements Serializable {
         interval = intervalTick;
 
         try {
+
+            stopInventory = false;
+            isInventory = true;
+            invThread = new InventoryThread();
+            invThread.start();
+
+
             if (mSerialPort != null) {
                 byte[] buffer = new byte[2];
-                buffer[0] = 0x01;
+                buffer[0] = 0x00;
                 buffer[1] = (byte) invMode;
                 buffer = commonFun.MakePacket(buffer, commonFun.HostPacketTypes.HOST_PACKET_TYPE_18K6C_INVENTORY_COMMAND);
 
                 try {
                     synchronized (mOutputStream) {
+
                         mOutputStream.write(buffer);
                         mOutputStream.flush();
                     }
@@ -823,14 +818,13 @@ public class RadioCtrl implements Serializable {
                     e.printStackTrace();
                 }
 
-                stopInventory = false;
-                isInventory = true;
-                invThread = new InventoryThread();
-                invThread.start();
             } else {
                 isBusy = false;
                 isSuccess = ctrlOperateResult.ERROR;
             }
+
+
+
         } catch (SecurityException e) {
             isBusy = false;
             isSuccess = ctrlOperateResult.SERIALPORTERROR;

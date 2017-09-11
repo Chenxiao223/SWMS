@@ -14,14 +14,27 @@ import android.widget.Toast;
 
 import com.dao.Operation;
 import com.dao.ShowAdapter3;
+import com.google.gson.Gson;
 import com.hiklife.rfidapi.InventoryEvent;
-import com.hiklife.rfidapi.OnInventoryEventListener;
 import com.hiklife.rfidapi.radioBusyException;
+import com.loopj.android.http.RequestParams;
+import com.zjfd.chenxiao.DHL.Entity.SearchQuery;
 import com.zjfd.chenxiao.DHL.R;
+import com.zjfd.chenxiao.DHL.http.BaseHttpResponseHandler;
+import com.zjfd.chenxiao.DHL.http.HttpNetworkRequest;
+
+import net.sf.json.JSON;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Request;
 
 /**
  * Created by Administrator on 2017/8/31 0031.
@@ -170,7 +183,7 @@ public class SearchActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public static void ShowEPC(Activity activity, String flagID) {
+    public void ShowEPC(Activity activity, String flagID) {
 
         String epc = com.dao.BaseDao.exChange(flagID);
 
@@ -188,13 +201,12 @@ public class SearchActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public static void addShowInfoToList(String epc) {
+    public void addShowInfoToList(String epc) {
         if (TextUtils.isEmpty(epc)){//为空
             addShowInfoToList(SearchActivity.searchActivity.getRfid());
         }else {
-            hashMap.put("content2", epc);
-            showInfoList.add(hashMap);
-            showadapter.notifyDataSetChanged();
+            queryShelf(epc);
+
         }
     }
 
@@ -208,5 +220,45 @@ public class SearchActivity extends Activity implements View.OnClickListener {
     public String getRfid() {
         com.dao.Result result = Operation.readUnGivenTid((short) 3, (short) 3);
         return result.getReadInfo().toString();
+    }
+
+    public void queryShelf(final String rfid){
+        try {
+            RequestParams params=new RequestParams();
+            params.put("index","2");
+            params.put("tablename","duty");
+            params.put("parameter","dutyRfid");
+            params.put("parameter1",rfid);
+            HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
+                    try {
+                        JSONArray jsonArray=new JSONArray(rawResponse);
+                        int size=jsonArray.length();
+                        for (int i=0;i<size;i++){
+                            JSONObject jsonObject=jsonArray.getJSONObject(i);
+                            String duty= (String) jsonObject.get("duty");
+                            String cell= (String) jsonObject.get("cell");
+                            hashMap.put("content2", rfid);
+                            hashMap.put("content3", duty);
+                            hashMap.put("content4", cell);
+                            showInfoList.add(hashMap);
+                            showadapter.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
+                    Toast.makeText(SearchActivity.this, "数据请求失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(SearchActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -91,7 +91,8 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        epc = result;
+//        epc = result;
+        epc="2LCN100176+46000000";
         tv_value.setVisibility(View.VISIBLE);
         vibrate();
         mQRCodeView.stopSpot();//关闭扫描

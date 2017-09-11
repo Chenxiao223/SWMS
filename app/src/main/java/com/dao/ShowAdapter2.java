@@ -1,6 +1,7 @@
 package com.dao;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ShowAdapter2 extends BaseAdapter {
-
     private Context mcontext;
     private List<HashMap<String,String>> mList = new ArrayList<HashMap<String,String>>();
     private LayoutInflater minflater;
-
+    private int flag=-1;
 
     public ShowAdapter2(Context context, List<HashMap<String,String>> List) {
         this.mcontext = context;
@@ -61,7 +61,12 @@ public class ShowAdapter2 extends BaseAdapter {
             viewHold.tvtime = (TextView) convertView.findViewById(R.id.tv_showscantime);//时间
             viewHold.tvfullcode2 = (TextView) convertView.findViewById(R.id.tv_showfullcode2);//全码
             viewHold.tvtime2 = (TextView) convertView.findViewById(R.id.tv_showscantime2);//时间
-
+            viewHold.tv_shelf = (TextView) convertView.findViewById(R.id.tv_shelf);
+            viewHold.tv_plies = (TextView) convertView.findViewById(R.id.tv_plies);
+            if (position==flag){
+                viewHold.tvfullcode2.setTextColor(Color.parseColor("#7ac671"));
+                viewHold.tvtime2.setTextColor(Color.parseColor("#7ac671"));
+            }
             convertView.setTag(viewHold);
         } else {
             viewHold = (ViewHold) convertView.getTag();
@@ -71,6 +76,8 @@ public class ShowAdapter2 extends BaseAdapter {
         viewHold.tvtime.setText(mList.get(position).get("content2"));
         viewHold.tvfullcode2.setText(mList.get(position).get("content3"));
         viewHold.tvtime2.setText(mList.get(position).get("content4"));
+        viewHold.tv_shelf.setText(mList.get(position).get("content5"));
+        viewHold.tv_plies.setText(mList.get(position).get("content6"));
         return convertView;
     }
 
@@ -78,7 +85,9 @@ public class ShowAdapter2 extends BaseAdapter {
         TextView tvfullcode;
         TextView tvtime;
         TextView tvfullcode2;
-        TextView tvtime2;
+        TextView tvtime2,tv_shelf,tv_plies;
     }
-
+    public void changeColor(int i){
+        flag=i;
+    }
 }

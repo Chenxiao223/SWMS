@@ -94,7 +94,6 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-
                 <Spinner
                     android:id="@+id/spin_userManage"
                     android:layout_width="0dp"
@@ -103,8 +102,7 @@
                     android:ellipsize="end"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text="默认用户/强制用户"
-                    android:textSize="20sp" />
+                    android:text="默认用户/强制用户" />
 
                 <TextView
                     android:id="@+id/tv_userManage_click"
@@ -113,7 +111,6 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:gravity="right" />
-
             </TableRow>
 
             <TableRow

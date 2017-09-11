@@ -9,10 +9,10 @@
         android:background="#F6D403">
 
         <ImageView
-            android:id="@+id/iv_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="12dp"
+            android:onClick="back"
             android:src="@drawable/iv_back" />
 
         <TextView
@@ -28,7 +28,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:src="@drawable/timg"
         android:scaleType="fitXY"/>
     <LinearLayout
@@ -64,8 +64,10 @@
                     android:textSize="17sp" />
 
                 <TextView
+                    android:id="@+id/loginstate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="#21de2e"
                     android:textSize="17sp" />
 
             </LinearLayout>
@@ -86,6 +88,7 @@
                     android:textSize="17sp" />
 
                 <TextView
+                    android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp" />
@@ -95,7 +98,6 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginLeft="20dp"
@@ -103,7 +105,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_btn"
             android:gravity="center_vertical|center_horizontal"
-            android:onClick="login"
+            android:onClick="backLogin"
             android:text="退出登录"
             android:textColor="#fff"
             android:textSize="17sp" />

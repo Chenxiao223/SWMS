@@ -3,8 +3,13 @@ package com.zjfd.chenxiao.DHL.UI;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +28,7 @@ import com.dao.Setting;
 import com.zjfd.chenxiao.DHL.Adapter.HomePageAdapter;
 import com.zjfd.chenxiao.DHL.R;
 import com.zjfd.chenxiao.DHL.rfid.RfidOperation;
+import com.zjfd.chenxiao.DHL.util.MediaUtil;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -42,12 +48,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView iv_setting, iv_search;
     public static Setting setting;
     private int requestCode;
+    private IntentFilter intentFilter;
+    private NetworkChangeReceiver networkChangeReceiver;
+    private ImageView iv_head;
+    MediaUtil mediaUtil = new MediaUtil(this);
+    public static String loginState="0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         //
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        networkChangeReceiver = new NetworkChangeReceiver();
+        registerReceiver(networkChangeReceiver, intentFilter);//注册监听网络变化的广播
+
         connectRadio();
         setting = getSettingData();
         Oldsetting = setting;
@@ -63,7 +79,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tv_pandian = (TextView) findViewById(R.id.tv_pandian);
         iv_setting = (ImageView) findViewById(R.id.iv_setting);
         iv_search = (ImageView) findViewById(R.id.iv_search);
+        iv_head= (ImageView) findViewById(R.id.iv_head);
 
+        iv_head.setOnClickListener(this);
         tv_ruku.setOnClickListener(this);
         tv_shangjia.setOnClickListener(this);
         tv_yiwei.setOnClickListener(this);
@@ -73,7 +91,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         iv_search.setOnClickListener(this);
 
         pager = (ViewPager) findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(4);//碎片左右各四个保持当前状态
+//        pager.setOffscreenPageLimit(4);//碎片左右各四个保持当前状态
         homePageAdapter = new HomePageAdapter(getSupportFragmentManager());
         pager.setAdapter(homePageAdapter);
 
@@ -110,6 +128,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.iv_search:
                 startActivity(new Intent(this,SearchActivity.class));
+                break;
+            case R.id.iv_head:
+                if (loginState.equals("1")){//表示登录了
+                    startActivity(new Intent(this,LoginStateActivity.class));
+                }else{//表示未登录
+                    if (setting.getUserManage().equals("强制用户")){
+                        startActivity(new Intent(this,LoginActivity.class));
+                    }else if (setting.getUserManage().equals("默认用户")){
+                        loginState="1";
+                    }
+                }
                 break;
         }
     }
@@ -358,5 +387,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 hMsg2.sendMessage(closemsg);
             }
         }.start();
+    }
+
+    //网络监听类
+    class NetworkChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isAvailable()) {
+                Toast.makeText(context, "网络可用", Toast.LENGTH_SHORT).show();
+                iv_head.setImageResource(R.drawable.head_lv);
+            } else {
+                mediaUtil.music(R.raw.p);//语音提示
+                Toast.makeText(context, "网络不可用", Toast.LENGTH_SHORT).show();
+                iv_head.setImageResource(R.drawable.head_lvh);
+            }
+        }
     }
 }

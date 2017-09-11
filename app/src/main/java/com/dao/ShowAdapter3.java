@@ -59,6 +59,8 @@ public class ShowAdapter3 extends BaseAdapter {
             convertView = minflater.inflate(R.layout.show3, null);
             viewHold.tv_barCode = (TextView) convertView.findViewById(R.id.tv_barCode);//条码
             viewHold.tv_epc = (TextView) convertView.findViewById(R.id.tv_epc);//epc
+            viewHold.tv_shelf = (TextView) convertView.findViewById(R.id.tv_shelf);//层数
+            viewHold.tv_plies = (TextView) convertView.findViewById(R.id.tv_plies);//货架
 
             convertView.setTag(viewHold);
         } else {
@@ -67,12 +69,13 @@ public class ShowAdapter3 extends BaseAdapter {
         }
         viewHold.tv_barCode.setText(mList.get(position).get("content1"));
         viewHold.tv_epc.setText(mList.get(position).get("content2"));
+        viewHold.tv_shelf.setText(mList.get(position).get("content3"));
+        viewHold.tv_plies.setText(mList.get(position).get("content4"));
         return convertView;
     }
 
     private final static class ViewHold {
-        TextView tv_barCode;
-        TextView tv_epc;
+        TextView tv_epc,tv_barCode,tv_shelf,tv_plies;
     }
 
 }
