@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dao.Operation;
-import com.dao.ShowAdapter;
 import com.dao.ShowAdapter2;
 import com.dao.ShowInfo;
 import com.dao.ShowInfo2;
@@ -239,6 +238,7 @@ public class ShangjiaFragment extends Fragment {
             queryShelf(epc);
             hashMap.put("content1", epc);
             hashMap.put("content2", time);
+            hashMap.put("content7", "0");
             flag += 1;
         } else if (flag == 1) {
             hashMap.put("content3", epc);

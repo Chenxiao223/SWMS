@@ -7,7 +7,16 @@ public class ShowInfo {
     String time2;
     String power;
     String rssi;
+    String flag;
     boolean UploadFlag;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 
     public boolean getUploadFlag() {
         return UploadFlag;

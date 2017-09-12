@@ -228,6 +228,7 @@ public class ChukuFragment extends Fragment {
         hashMap = new HashMap<>();
         hashMap.put("content3", epc);
         hashMap.put("content4", time);
+        hashMap.put("content7", "0");
         queryShelf(epc);
         getBarCode(time, epc);
     }

@@ -254,6 +254,7 @@ public class RukuFragment extends Fragment {
         }else {
             showinfo.setEpc2(epc);
             showinfo.setTime2(time);
+            showinfo.setFlag("0");
             showinfo.setUploadFlag(false);
             upData(showinfo);
             showInfoList.add(showinfo);
@@ -270,7 +271,7 @@ public class RukuFragment extends Fragment {
 
     //扫描获取rfid
     public String getRfid() {
-        com.dao.Result result = Operation.readUnGivenTid((short) 3, (short) 3);
+        com.dao.Result result = Operation.readUnGivenEpc((short) 2, (short) 6);
         return result.getReadInfo().toString();
     }
 
@@ -280,19 +281,21 @@ public class RukuFragment extends Fragment {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
             String time = df.format(new Date());
             RequestParams params=new RequestParams();
-            params.put("index","1");
+            params.put("index","3");
             params.put("tablename","warehouse");
-            params.put("parameter",showinfo.getEpc());//包裹条码
-            params.put("parameter1",time);//入库时间
-            params.put("parameter2",showinfo.getEpc2());//包裹rfid
-            params.put("parameter3", showinfo.getTime());//条码时间
-            HttpNetworkRequest.get("add", params, new BaseHttpResponseHandler() {
+            params.put("parameter","importRfid");
+            params.put("parameter1",showinfo.getEpc2());//包裹rfid
+            params.put("parameter2","barcode");
+            params.put("parameter3",showinfo.getEpc());//包裹条码
+            params.put("parameter4","barcodeTime");
+            params.put("parameter5", time);
+            HttpNetworkRequest.get("revise", params, new BaseHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
                     if (rawResponse.equals("ok")) {
+                        showinfo.setFlag("1");
                         showadapter=new ShowAdapter(getActivity(), showInfoList);
                         list_view.setAdapter(showadapter);
-                        showadapter.changeColor(showInfoList.size() - 1);//传1改变字体颜色
                         showadapter.notifyDataSetChanged();
                         tv_uploadCount.setText(""+num++);
                         Toast.makeText(getActivity(), "数据上传成功", Toast.LENGTH_SHORT).show();

@@ -78,6 +78,10 @@ public class ShowAdapter extends BaseAdapter {
 		viewHold.tvtime.setText(mList.get(position).getTime());
 		viewHold.tvfullcode2.setText(mList.get(position).getEpc2());
 		viewHold.tvtime2.setText(mList.get(position).getTime2());
+		if (mList.get(position).getFlag().equals("1")){
+			viewHold.tvfullcode2.setTextColor(Color.parseColor("#7ac671"));
+			viewHold.tvtime2.setTextColor(Color.parseColor("#7ac671"));
+		}
 		return convertView;
 	}
 	
