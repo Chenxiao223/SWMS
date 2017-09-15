@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,7 @@ public class RukuFragment extends Fragment {
         if (TextUtils.isEmpty(epc)){//为空
             addShowInfoToList(RukuFragment.rukuFragment.getRfid());
         }else {
+            writeEpc(epc);
             showinfo.setEpc2(epc);
             showinfo.setTime2(time);
             showinfo.setFlag("0");
@@ -94,6 +96,13 @@ public class RukuFragment extends Fragment {
             showInfoList.add(showinfo);
             showadapter.notifyDataSetChanged();
             tv_readCount.setText("" + showInfoList.size());
+        }
+    }
+
+    public void writeEpc(String epc){
+        if (!isLetterDigitOrChinese(epc)){
+            com.dao.Result result = Operation.WriteUnGivenEpc(epc + "0000000000000000000000");
+            Log.i("chengg",result.getReadInfo().toString());
         }
     }
 

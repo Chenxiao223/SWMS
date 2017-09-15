@@ -61,7 +61,7 @@ public class SearchActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        searchActivity=this;
+        searchActivity = this;
 
         //监听盘点
 //        Operation.myRadio.setInventoryEventListener(new OnInventoryEventListener() {
@@ -202,9 +202,9 @@ public class SearchActivity extends Activity implements View.OnClickListener {
     }
 
     public void addShowInfoToList(String epc) {
-        if (TextUtils.isEmpty(epc)){//为空
-            addShowInfoToList(SearchActivity.searchActivity.getRfid());
-        }else {
+        if (TextUtils.isEmpty(epc)) {//为空
+            addShowInfoToList(getRfid());
+        } else {
             queryShelf(epc);
         }
     }
@@ -221,31 +221,35 @@ public class SearchActivity extends Activity implements View.OnClickListener {
         return result.getReadInfo().toString();
     }
 
-    public void queryShelf(final String rfid){
+    public void queryShelf(final String rfid) {
         try {
-            RequestParams params=new RequestParams();
-            params.put("index","2");
-            params.put("tablename","duty");
-            params.put("parameter","dutyRfid");
-            params.put("parameter1",rfid);
+            RequestParams params = new RequestParams();
+            params.put("index", "2");
+            params.put("tablename", "duty");
+            params.put("parameter", "dutyRfid");
+            params.put("parameter1", rfid);
             HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
-                    try {
-                        JSONArray jsonArray=new JSONArray(rawResponse);
-                        int size=jsonArray.length();
-                        for (int i=0;i<size;i++){
-                            JSONObject jsonObject=jsonArray.getJSONObject(i);
-                            String duty= (String) jsonObject.get("duty");
-                            String cell= (String) jsonObject.get("cell");
-                            hashMap.put("content2", rfid);
-                            hashMap.put("content3", duty);
-                            hashMap.put("content4", cell);
-                            showInfoList.add(hashMap);
-                            showadapter.notifyDataSetChanged();
+                    if (rawResponse.equals("[]")) {
+                        Toast.makeText(SearchActivity.this, "未搜索到", Toast.LENGTH_SHORT).show();
+                    } else {
+                        try {
+                            JSONArray jsonArray = new JSONArray(rawResponse);
+                            int size = jsonArray.length();
+                            for (int i = 0; i < size; i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                String duty = (String) jsonObject.get("duty");
+                                String cell = (String) jsonObject.get("cell");
+                                hashMap.put("content2", rfid);
+                                hashMap.put("content3", duty);
+                                hashMap.put("content4", cell);
+                                showInfoList.add(hashMap);
+                                showadapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
 

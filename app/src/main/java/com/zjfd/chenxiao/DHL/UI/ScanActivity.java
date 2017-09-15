@@ -92,8 +92,9 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-//        epc = result;
-        epc="2LCN100176+46000000";
+        epc = result;
+//        Log.i("result",result);
+        epc="7463274394";
         vibrate();
         mQRCodeView.stopSpot();//关闭扫描
         if (flag == 1) {
@@ -110,8 +111,8 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
         RukuFragment.rukuFragment.showinfo.setEpc(epc);
         RukuFragment.rukuFragment.showinfo.setTime(time);
         String rfid=RukuFragment.rukuFragment.getRfid();
-        if (!RukuFragment.rukuFragment.isLetterDigitOrChinese(rfid.substring(0,4))) {//判断rfid不是货架标签
-            RukuFragment.rukuFragment.addShowInfoToList(rfid);
+        if (!RukuFragment.rukuFragment.isLetterDigitOrChinese(rfid.substring(0,12))) {//判断rfid不是货架标签
+            RukuFragment.rukuFragment.addShowInfoToList(epc);
         }else{
             Toast.makeText(ScanActivity.this, "请扫描货物标签", Toast.LENGTH_SHORT).show();
         }

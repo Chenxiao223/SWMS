@@ -104,7 +104,7 @@ public class ShangjiaFragment extends Fragment {
     public void addShowInfoToList(String epc) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         String time = df.format(new Date());
-        if (flag == 0 && isLetterDigitOrChinese(epc.substring(0,4))) {
+        if (flag == 0 && isLetterDigitOrChinese(epc.substring(0,12))) {
             hashMap = new HashMap<>();
             hashMap.put("content1", epc);
             hashMap.put("content2", time);

@@ -125,7 +125,6 @@ public class YiweiFragment extends Fragment implements View.OnClickListener {
                 startScanRfid();
                 break;
             case R.id.iv_scan:
-                Log.i("rfid", getRfid());
                 String rfid=getRfid();
                 if (!TextUtils.isEmpty(rfid)) {
                     addShowInfoToList(rfid);
@@ -312,7 +311,6 @@ public class YiweiFragment extends Fragment implements View.OnClickListener {
             params.put("tablename","duty");
             params.put("parameter","dutyRfid");
             params.put("parameter1", rfid);
-            Log.i("rfid",rfid);
             HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {

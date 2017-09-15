@@ -313,7 +313,7 @@ public class PandianFragment extends Fragment {
     }
 
     public void addShowInfoToList(String epc) {
-        if (!isLetterDigitOrChinese(epc.substring(0,4))) {
+        if (!isLetterDigitOrChinese(epc.substring(0,12))) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
             String time = df.format(new Date());
             hashMap = new HashMap<>();
