@@ -40,6 +40,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Administrator on 2017/7/17 0017.
@@ -81,7 +83,6 @@ public class PandianFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         initView();
     }
 
@@ -128,44 +129,50 @@ public class PandianFragment extends Fragment {
         Iterator it_y = result_y.iterator();
         while (it_y.hasNext()) {
             hashMap = new HashMap<>();
-//            if (hm_rfid.get(it_y.next().toString()).get("importRfid")!=null) {
-                HashMap<String,String> mmp=hm_rfid.get(it_y.next().toString());
-                hashMap.put("content1", mmp.get("importRfid"));
-                hashMap.put("content2", mmp.get("importTime"));
-                hashMap.put("content3", mmp.get("barcode"));
-                hashMap.put("content4", mmp.get("barcodeTime"));
+            try {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+                String time = df.format(new Date());
+                String rfid=it_y.next().toString();
                 hashMap.put("content7", "1");
-//            }
+                hashMap.put("content1", rfid);
+                hashMap.put("content2", time);
+                hashMap.put("content3", "");
+                hashMap.put("content4", "");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             showInfoList.add(hashMap);
         }
         Iterator it_k = result_k.iterator();
         while (it_k.hasNext()) {
             hashMap = new HashMap<>();
-            Log.i("next", hm_rfid.get(it_k.next().toString()).toString());
-//            if (hm_rfid.get(it_k.next().toString()).get("importRfid")!=null) {
+            try {
                 HashMap<String,String> mmp=hm_rfid.get(it_k.next().toString());
                 hashMap.put("content1", mmp.get("importRfid"));
                 hashMap.put("content2", mmp.get("importTime"));
                 hashMap.put("content3", mmp.get("barcode"));
                 hashMap.put("content4", mmp.get("barcodeTime"));
                 hashMap.put("content7", "2");
-//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             showInfoList.add(hashMap);
         }
         Iterator it_p = result_p.iterator();
         while (it_p.hasNext()) {
             hashMap = new HashMap<>();
-//            if (hm_rfid.get(it_p.next().toString()).get("importRfid")!=null) {
+            try {
                 HashMap<String,String> mmp=hm_rfid.get(it_p.next().toString());
                 hashMap.put("content1", mmp.get("importRfid"));
                 hashMap.put("content2", mmp.get("importTime"));
                 hashMap.put("content3", mmp.get("barcode"));
                 hashMap.put("content4", mmp.get("barcodeTime"));
                 hashMap.put("content7", "3");
-//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             showInfoList.add(hashMap);
         }
-        Log.i("size",showInfoList.size()+"");
         showadapter.notifyDataSetChanged();
     }
 
@@ -187,7 +194,7 @@ public class PandianFragment extends Fragment {
                 }
             });
             //开始扫描
-            startScanRfid();
+            timeDelay();
         } else {
             //停止扫描
             stopScanRfid();
@@ -292,9 +299,7 @@ public class PandianFragment extends Fragment {
     }
 
     public void ShowEPC(Activity activity, String flagID) {
-
         String epc = com.dao.BaseDao.exChange(flagID);
-
         if (!tagInfoList.contains(epc)) {
             tagCount++;
             tagInfoList.add(epc);
@@ -305,19 +310,25 @@ public class PandianFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void addShowInfoToList(String epc) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        String time = df.format(new Date());
-        hashMap = new HashMap<>();
-        hashMap.put("content3", epc);
-        hashMap.put("content4", time);
-        hashMap.put("content7", "0");
-        queryShelf(epc);
-        getBarCode(time, epc);
-        list_rfid.add(epc);
+        if (!isLetterDigitOrChinese(epc.substring(0,4))) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+            String time = df.format(new Date());
+            hashMap = new HashMap<>();
+            hashMap.put("content3", epc);
+            hashMap.put("content4", time);
+            hashMap.put("content7", "0");
+            queryShelf(epc);
+            getBarCode(time, epc);
+            list_rfid.add(epc);
+        }
+    }
+
+    //如果是字母则返回true
+    public static boolean isLetterDigitOrChinese(String str) {
+        return str.matches("[a-zA-Z]+");
     }
 
     public void AllClear() {
@@ -344,14 +355,14 @@ public class PandianFragment extends Fragment {
                         String cell = (String) jsonObject.get("cell");
                         hashMap.put("content5", duty);
                         hashMap.put("content6", cell);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
-                    showMasage("数据请求失败");
+                    showMasage("请求失败");
                 }
             });
         } catch (Exception e) {
@@ -362,33 +373,37 @@ public class PandianFragment extends Fragment {
     }
 
     public void getBarCode(final String times, final String rfid) {
-        RequestParams params = new RequestParams();
-        params.put("index", "2");
-        params.put("tablename", "warehouse");
-        params.put("parameter", "importRfid");
-        params.put("parameter1", rfid);
-        Log.i("getBarCode", rfid);
-        HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(rawResponse);
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    hashMap.put("content1", (String) jsonObject.get("barcode"));
-                    hashMap.put("content2", times);
-                    showInfoList.add(hashMap);
-                    showadapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("pandian", e.getMessage());
+        try {
+            RequestParams params = new RequestParams();
+            params.put("index", "2");
+            params.put("tablename", "warehouse");
+            params.put("parameter", "importRfid");
+            params.put("parameter1", rfid);
+            Log.i("getBarCode", rfid);
+            HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(rawResponse);
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        hashMap.put("content1", (String) jsonObject.get("barcode"));
+                        hashMap.put("content2", times);
+                        showInfoList.add(hashMap);
+                        showadapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("pandian", e.getMessage());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
-                showMasage("网络异常");
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
+                    showMasage("网络异常");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -405,21 +420,20 @@ public class PandianFragment extends Fragment {
                     JSONArray jsonArray = new JSONArray(rawResponse);
                     int size = jsonArray.length();
                     for (int i = 0; i < size; i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        list_barcode.add((String) jsonObject.get("importRfid"));//将每一条包裹条形码存入集合
-                        hm_info=new HashMap<String, String>();
-                        hm_info.put("importRfid", String.valueOf(jsonObject.get("importRfid")));
-                        hm_info.put("importTime", String.valueOf(jsonObject.get("importTime")));
-                        hm_info.put("barcode", String.valueOf(jsonObject.get("barcode")));
-                        hm_info.put("barcodeTime", String.valueOf(jsonObject.get("barcodeTime")));
-//                        info.setRfid((String) jsonObject.get("importRfid"));
-//                        info.setRfidtime((String) jsonObject.get("importTime"));
-//                        info.setBorcode((String) jsonObject.get("barcode"));
-//                        info.setBortime((String) jsonObject.get("barcodeTime"));
-
-                        hm_rfid.put((String) jsonObject.get("importRfid"), hm_info);
+                        try {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            list_barcode.add((String) jsonObject.get("importRfid"));//将每一条包裹条形码存入集合
+                            hm_info=new HashMap<String, String>();
+                            hm_info.put("importRfid", String.valueOf(jsonObject.get("importRfid")));
+                            hm_info.put("importTime", String.valueOf(jsonObject.get("importTime")));
+                            hm_info.put("barcode", String.valueOf(jsonObject.get("barcode")));
+                            hm_info.put("barcodeTime", String.valueOf(jsonObject.get("barcodeTime")));
+                            hm_rfid.put((String) jsonObject.get("importRfid"), hm_info);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -433,5 +447,16 @@ public class PandianFragment extends Fragment {
 
     public void showMasage(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void timeDelay(){
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                startScanRfid();
+            }
+        };
+        timer.schedule(timerTask, 1000);
     }
 }

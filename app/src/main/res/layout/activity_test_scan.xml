@@ -105,8 +105,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginBottom="143dp"
-            android:text="请扫描标签"
-            android:visibility="gone"
+            android:text="先扫条码载扫描标签"
             android:textColor="#46e392"
             android:textSize="20dp" />
 

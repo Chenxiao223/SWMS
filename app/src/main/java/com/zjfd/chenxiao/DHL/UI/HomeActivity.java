@@ -38,6 +38,7 @@ import java.lang.ref.WeakReference;
  * Created by Administrator on 2017/8/9 0009.
  */
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+    public static HomeActivity homeActivity;
     protected static final int MSG_DISCONNECT = 3;
     protected static final int MSG_CONNECT = 2;
     protected static final int MSG_OPERATION_SUCCESS = 1;
@@ -59,6 +60,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         //
+        homeActivity=this;
         intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         networkChangeReceiver = new NetworkChangeReceiver();
@@ -228,10 +230,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case 0:
                 Serializable setdata = data.getSerializableExtra("Setting");
                 setting = (Setting) setdata;
-                Log.i("info",setting.getPower());
                 if (Oldsetting.getPower().equals(setting.getPower())) {
 //                    disconnect();
-                    Toast.makeText(getApplicationContext(), "重新设置功率中。。。", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "重新设置功率中......", Toast.LENGTH_SHORT).show();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {

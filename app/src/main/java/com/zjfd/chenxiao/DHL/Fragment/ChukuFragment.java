@@ -22,8 +22,10 @@ import com.hiklife.rfidapi.OnInventoryEventListener;
 import com.hiklife.rfidapi.radioBusyException;
 import com.loopj.android.http.RequestParams;
 import com.zjfd.chenxiao.DHL.R;
+import com.zjfd.chenxiao.DHL.UI.HomeActivity;
 import com.zjfd.chenxiao.DHL.http.BaseHttpResponseHandler;
 import com.zjfd.chenxiao.DHL.http.HttpNetworkRequest;
+import com.zjfd.chenxiao.DHL.util.MediaUtil;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -36,6 +38,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Administrator on 2017/7/17 0017.
@@ -57,6 +61,7 @@ public class ChukuFragment extends Fragment {
     public static ListView list_view;
     public static HashMap<String, String> hashMap;
     private int num=1;//记录上传成功的次数
+    MediaUtil mediaUtil = new MediaUtil(HomeActivity.homeActivity);
 
     @Nullable
     @Override
@@ -95,12 +100,14 @@ public class ChukuFragment extends Fragment {
                 }
             });
             //开始扫描
-            startScanRfid();
+            timeDelay();
         } else {
             //停止扫描
             stopScanRfid();
         }
     }
+
+
 
     //用于集中处理显示等事件信息的静态类
     private class StartHander extends Handler {
@@ -223,14 +230,21 @@ public class ChukuFragment extends Fragment {
     }
 
     public void addShowInfoToList(String epc) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        String time = df.format(new Date());
-        hashMap = new HashMap<>();
-        hashMap.put("content3", epc);
-        hashMap.put("content4", time);
-        hashMap.put("content7", "0");
-        queryShelf(epc);
-        getBarCode(time, epc);
+        if (!isLetterDigitOrChinese(epc.substring(0,4))) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+            String time = df.format(new Date());
+            hashMap = new HashMap<>();
+            hashMap.put("content3", epc);
+            hashMap.put("content4", time);
+            hashMap.put("content7", "0");
+            queryShelf(epc);
+            getBarCode(time, epc);
+        }
+    }
+
+    //如果是字母则返回true
+    public static boolean isLetterDigitOrChinese(String str) {
+        return str.matches("[a-zA-Z]+");
     }
 
     public void getBarCode(final String times, final String rfid) {
@@ -239,29 +253,31 @@ public class ChukuFragment extends Fragment {
         params.put("tablename", "warehouse");
         params.put("parameter", "importRfid");
         params.put("parameter1", rfid);
-        Log.i("getBarCode", rfid);
-        HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(rawResponse);
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    hashMap.put("content1", (String) jsonObject.get("barcode"));
-                    hashMap.put("content2", times);
-                    showInfoList.add(hashMap);
-                    showadapter.notifyDataSetChanged();
-                    upData(rfid,times);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("pandian", e.getMessage());
+        try {
+            HttpNetworkRequest.get("query", params, new BaseHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(rawResponse);
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        hashMap.put("content1", (String) jsonObject.get("barcode"));
+                        hashMap.put("content2", times);
+                        showInfoList.add(hashMap);
+                        showadapter.notifyDataSetChanged();
+                        upData(rfid, times);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
-                showMasage("网络异常");
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
+                    showMasage("网络异常");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -318,26 +334,45 @@ public class ChukuFragment extends Fragment {
         params.put("parameter1",rfid);//包裹rfid
         params.put("parameter2","exportTime");
         params.put("parameter3",times);//出库时间
-        HttpNetworkRequest.get("revise", params, new BaseHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
-                if (rawResponse.equals("ok")) {
-                    showadapter=new ShowAdapter2(getActivity(), showInfoList);
-                    list_view.setAdapter(showadapter);
-                    showadapter.changeColor(showInfoList.size()-1);//传1改变字体颜色
-                    showadapter.notifyDataSetChanged();
-                    showMasage("数据上传成功");
-                    tv_uploadCount.setText(""+num++);
-                }else{
-                    showMasage("数据上传失败");
+        params.put("parameter4","isExport");
+        params.put("parameter5","2");
+        try {
+            HttpNetworkRequest.get("revise", params, new BaseHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
+                    if (rawResponse.equals("ok")) {
+                        hashMap.put("content7", "4");
+                        showadapter = new ShowAdapter2(getActivity(), showInfoList);
+                        list_view.setAdapter(showadapter);
+                        showadapter.notifyDataSetChanged();
+                        showMasage("上传成功");
+                        mediaUtil.music(R.raw.success);//语音提示
+                        tv_uploadCount.setText("" + num++);
+                    } else {
+                        showMasage("上传失败");
+                        mediaUtil.music(R.raw.failure);//语音提示
+                    }
                 }
-            }
 
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
+                    showMasage("网络异常");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void timeDelay(){
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
-                showMasage("网络异常");
+            public void run() {
+                startScanRfid();
             }
-        });
+        };
+        timer.schedule(timerTask, 1000);
     }
 
 }

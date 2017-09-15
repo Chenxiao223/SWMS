@@ -81,6 +81,11 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
+        <activity
+            android:name=".UI.ActivityPower"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="NGnfonwH3BZ0Ek4GStmmV858fZjVOoEe" />

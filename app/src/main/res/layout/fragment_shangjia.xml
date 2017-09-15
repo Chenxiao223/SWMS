@@ -34,7 +34,18 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textSize="20sp" />
+
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_scan"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:src="@drawable/scan"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dao.Setting;
 import com.dao.ShowInfo;
@@ -93,7 +94,6 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
     public void onScanQRCodeSuccess(String result) {
 //        epc = result;
         epc="2LCN100176+46000000";
-        tv_value.setVisibility(View.VISIBLE);
         vibrate();
         mQRCodeView.stopSpot();//关闭扫描
         if (flag == 1) {
@@ -109,7 +109,12 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
         RukuFragment.rukuFragment.showinfo = new ShowInfo();
         RukuFragment.rukuFragment.showinfo.setEpc(epc);
         RukuFragment.rukuFragment.showinfo.setTime(time);
-        RukuFragment.rukuFragment.addShowInfoToList(RukuFragment.rukuFragment.getRfid());
+        String rfid=RukuFragment.rukuFragment.getRfid();
+        if (!RukuFragment.rukuFragment.isLetterDigitOrChinese(rfid.substring(0,4))) {//判断rfid不是货架标签
+            RukuFragment.rukuFragment.addShowInfoToList(rfid);
+        }else{
+            Toast.makeText(ScanActivity.this, "请扫描货物标签", Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 

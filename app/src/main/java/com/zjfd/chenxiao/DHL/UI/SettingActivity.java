@@ -32,6 +32,7 @@ import java.util.List;
  * Created by Administrator on 2017/8/9 0009.
  */
 public class SettingActivity extends Activity {
+    public static SettingActivity settingActivity;
     ImageView imageView;
     Setting setting;
 
@@ -41,7 +42,7 @@ public class SettingActivity extends Activity {
     private TextView tv_server_click;
     private TextView tv_dataBase_info;
     private TextView tv_dataBase_click;
-    private TextView tv_power_info;
+    public TextView tv_power_info;
     private TextView tv_power_click;
     private TextView tv_CCTime_info;
     private TextView tv_CCTime_click;
@@ -139,7 +140,7 @@ public class SettingActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_set);
-
+        settingActivity=this;
         setting = (Setting) this.getIntent().getSerializableExtra("Setting");
         initView();
 
@@ -170,8 +171,7 @@ public class SettingActivity extends Activity {
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-//                showEditDialog("节点", tv_Node_info.getText().toString(), tv_Node_info);
-                //setting.setNode(tv_Node_info.getText().toString());
+                startActivity(new Intent(SettingActivity.this,ActivityPower.class));
             }
         });
 

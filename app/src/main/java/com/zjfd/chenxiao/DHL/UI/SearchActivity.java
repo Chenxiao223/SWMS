@@ -206,7 +206,6 @@ public class SearchActivity extends Activity implements View.OnClickListener {
             addShowInfoToList(SearchActivity.searchActivity.getRfid());
         }else {
             queryShelf(epc);
-
         }
     }
 
@@ -218,7 +217,7 @@ public class SearchActivity extends Activity implements View.OnClickListener {
 
     //扫描获取rfid
     public String getRfid() {
-        com.dao.Result result = Operation.readUnGivenEpc((short) 2, (short) 8);
+        com.dao.Result result = Operation.readUnGivenEpc((short) 2, (short) 6);
         return result.getReadInfo().toString();
     }
 
