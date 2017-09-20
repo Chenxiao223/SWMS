@@ -1,7 +1,6 @@
 package com.zjfd.chenxiao.DHL.UI;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,9 +59,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
         //
         homeActivity=this;
+        networkChangeReceiver = new NetworkChangeReceiver();
         intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        networkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(networkChangeReceiver, intentFilter);//注册监听网络变化的广播
 
         connectRadio();
@@ -209,7 +207,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 || setting.getScanInterval() == null) {
             Setting newset = new Setting();
             newset.setUserManage("默认用户");
-            newset.setServer("162.168.2.3:3040");
+            newset.setServer("192.168.1.30:8888");
             newset.setDataBase("HDL");
             newset.setPower("30");
             newset.setCCTime("2");
@@ -287,7 +285,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     int returnValue = (Integer) msg.obj;
                     switch (returnValue) {
                         case 0:
-                            Toast.makeText(HomeActivity.this, "RFID断开失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeActivity.this, "RFID断开成功", Toast.LENGTH_SHORT).show();
                             break;
 
                         case 1:

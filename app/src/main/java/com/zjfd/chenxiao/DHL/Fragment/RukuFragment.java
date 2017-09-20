@@ -26,6 +26,7 @@ import com.zjfd.chenxiao.DHL.http.HttpNetworkRequest;
 import com.zjfd.chenxiao.DHL.util.MediaUtil;
 
 import org.apache.http.Header;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +50,7 @@ public class RukuFragment extends Fragment {
     public static ListView list_view;
     private ImageView iv_scan;
     public static ShowInfo showinfo;
-    private int num=1;//记录上传成功的次数
+    private int num = 1;//记录上传成功的次数
     MediaUtil mediaUtil = new MediaUtil(HomeActivity.homeActivity);
 
     @Nullable
@@ -61,12 +62,12 @@ public class RukuFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        rukuFragment=this;
+        rukuFragment = this;
         initView();
     }
 
     public void initView() {
-        iv_scan= (ImageView) getView().findViewById(R.id.iv_scan);
+        iv_scan = (ImageView) getView().findViewById(R.id.iv_scan);
         tv_readCount = (TextView) getView().findViewById(R.id.tv_readCount);
         tv_uploadCount = (TextView) getView().findViewById(R.id.tv_uploadCount);
         list_view = (ListView) getView().findViewById(R.id.lv_EnterWH);
@@ -84,9 +85,9 @@ public class RukuFragment extends Fragment {
     public void addShowInfoToList(String epc) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         String time = df.format(new Date());
-        if (TextUtils.isEmpty(epc)){//为空
+        if (TextUtils.isEmpty(epc)) {//为空
             addShowInfoToList(RukuFragment.rukuFragment.getRfid());
-        }else {
+        } else {
             writeEpc(epc);
             showinfo.setEpc2(epc);
             showinfo.setTime2(time);
@@ -99,10 +100,9 @@ public class RukuFragment extends Fragment {
         }
     }
 
-    public void writeEpc(String epc){
-        if (!isLetterDigitOrChinese(epc)){
-            com.dao.Result result = Operation.WriteUnGivenEpc(epc + "0000000000000000000000");
-            Log.i("chengg",result.getReadInfo().toString());
+    public void writeEpc(String epc) {
+        if (!isLetterDigitOrChinese(epc)) {
+            com.dao.Result result = Operation.WriteUnGivenEpc(epc);
         }
     }
 
@@ -118,30 +118,31 @@ public class RukuFragment extends Fragment {
     }
 
     //数据上传成功
-    public void upData(final ShowInfo showinfo){
+    public void upData(final ShowInfo showinfo) {
         try {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
             String time = df.format(new Date());
-            RequestParams params=new RequestParams();
-            params.put("index","2");
-            params.put("tablename","warehouse");
-            params.put("parameter",showinfo.getEpc());//包裹条码
-            params.put("parameter1",time);//包裹rfid
-            params.put("parameter2",showinfo.getEpc2());//包裹rfid
-            params.put("parameter3",time);//入库时间
-            params.put("parameter4","0");
+            RequestParams params = new RequestParams();
+            params.put("index", "2");
+            params.put("tablename", "warehouse");
+            params.put("parameter", showinfo.getEpc());//包裹条码
+            params.put("parameter1", time);//包裹rfid
+            params.put("parameter2", showinfo.getEpc2());//包裹rfid
+            Log.i("rfid", showinfo.getEpc() + "," + showinfo.getEpc2());
+            params.put("parameter3", time);//入库时间
+            params.put("parameter4", "0");
             HttpNetworkRequest.get("add", params, new BaseHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawResponse, Object response) {
                     if (rawResponse.equals("ok")) {
                         showinfo.setFlag("1");
-                        showadapter=new ShowAdapter(getActivity(), showInfoList);
+                        showadapter = new ShowAdapter(getActivity(), showInfoList);
                         list_view.setAdapter(showadapter);
                         showadapter.notifyDataSetChanged();
                         tv_uploadCount.setText("" + num++);
                         Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
                         mediaUtil.music(R.raw.success);//语音提示
-                    }else{
+                    } else {
                         Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT).show();
                         mediaUtil.music(R.raw.failure);//语音提示
                     }

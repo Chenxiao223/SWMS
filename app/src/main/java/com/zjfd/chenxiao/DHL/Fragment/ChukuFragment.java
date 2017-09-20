@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dao.Operation;
-import com.dao.ShowAdapter;
 import com.dao.ShowAdapter2;
 import com.hiklife.rfidapi.InventoryEvent;
 import com.hiklife.rfidapi.OnInventoryEventListener;
@@ -72,7 +70,6 @@ public class ChukuFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         initView();
     }
 
@@ -230,7 +227,7 @@ public class ChukuFragment extends Fragment {
     }
 
     public void addShowInfoToList(String epc) {
-        if (!isLetterDigitOrChinese(epc.substring(0,4))) {
+        if (!isLetterDigitOrChinese(epc.substring(0,12))) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
             String time = df.format(new Date());
             hashMap = new HashMap<>();

@@ -2,8 +2,6 @@ package com.zjfd.chenxiao.DHL.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -94,27 +92,32 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
     public void onScanQRCodeSuccess(String result) {
         epc = result;
 //        Log.i("result",result);
-        epc="7463274394";
+//        epc = "7463274394";
         vibrate();
         mQRCodeView.stopSpot();//关闭扫描
         if (flag == 1) {
-            addSearch(epc);
+            addSearch(epc+ "00000000000000");
         } else {
-            addRuku(epc);
+            addRuku(epc + "00000000000000");
         }
     }
 
     public void addRuku(String epc) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        String time = df.format(new Date());
-        RukuFragment.rukuFragment.showinfo = new ShowInfo();
-        RukuFragment.rukuFragment.showinfo.setEpc(epc);
-        RukuFragment.rukuFragment.showinfo.setTime(time);
-        String rfid=RukuFragment.rukuFragment.getRfid();
-        if (!RukuFragment.rukuFragment.isLetterDigitOrChinese(rfid.substring(0,12))) {//判断rfid不是货架标签
-            RukuFragment.rukuFragment.addShowInfoToList(epc);
-        }else{
-            Toast.makeText(ScanActivity.this, "请扫描货物标签", Toast.LENGTH_SHORT).show();
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+            String time = df.format(new Date());
+            RukuFragment.rukuFragment.showinfo = new ShowInfo();
+            RukuFragment.rukuFragment.showinfo.setEpc(epc);
+            RukuFragment.rukuFragment.showinfo.setTime(time);
+            String rfid = RukuFragment.rukuFragment.getRfid();
+            if (!RukuFragment.rukuFragment.isLetterDigitOrChinese(rfid.substring(0, 12))) {//判断rfid不是货架标签
+                RukuFragment.rukuFragment.addShowInfoToList(epc);
+            } else {
+                Toast.makeText(ScanActivity.this, "请扫描货物标签", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+
+
         }
         finish();
     }

@@ -3,6 +3,7 @@ package com.zjfd.chenxiao.DHL.UI;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -73,12 +74,14 @@ public class LoginActivity extends Activity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.e("info", e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable e, String rawData, Object errorResponse) {
                 Toast.makeText(LoginActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Log.e("info", e.getMessage());
             }
         });
     }
